@@ -1,58 +1,38 @@
 
 import socket
 import time
-MOTOR = 2
-STOP = 6
-SERVO_LEFT = 7
-SERVO_RIGHT = 8
-SERVO_UP = 9
-SERVO_DOWN = 10
 
 class socket_driver:
 
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        conn = self.sock.connect(("192.168.1.1",2001))
+        conn = self.sock.connect(("192.168.11.1",2001))
         if conn:
-            print "socket connect."
+            print ("socket connect.")
 
-    def motor_control(self, left_speed, right_speed):
+    def forward(self):
+        print("Forward")
+        self.sock.send(chr(1).encode())
 
-        b = ""
-        a = [MOTOR, left_speed, right_speed]
-        print a
-        for i in range(len(a)):
-            b += chr(a[i])
-        print repr(b)
-        self.sock.send(b)
-        #time.sleep(0.2)
-        #print "recv:%s" % repr(self.sock.recv(1024))
+    def backward(self):
+        print("Reverse")
+        self.sock.send(chr(2).encode())
+
+    def left(self):
+        print("Right")
+        self.sock.send(chr(3).encode())
+
+    def right(self):
+        print("Left")
+        self.sock.send(chr(4).encode())
 
     def stop(self):
-        b = chr(STOP)
-        self.sock.send(b)
+        print("stop")
+        self.sock.send(chr(0).encode())
 
-    def eye_control(self, cmd):
-        if cmd == SERVO_LEFT:
-            b = chr(SERVO_LEFT)
-            self.sock.send(b)
-            print "recv:%s" % self.sock.recv(1024)
-        elif cmd == SERVO_RIGHT:
-            b = chr(SERVO_RIGHT)
-            self.sock.send(b)
-            print "recv:%s" % self.sock.recv(1024)
-        elif cmd == SERVO_UP:
-            b = chr(SERVO_UP)
-            self.sock.send(b)
-            print "recv:%s" % self.sock.recv(1024)
-        elif cmd == SERVO_DOWN:
-            b = chr(SERVO_DOWN)
-            self.sock.send(b)
-            print "recv:%s" % self.sock.recv(1024)
 
     def socket_close(self):
         self.sock.close()
-        print "socket driver close."
 
 
 def main():
